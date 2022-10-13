@@ -1,0 +1,120 @@
+<!doctype html>
+<head>
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+	<link rel="stylesheet" href="global.css"/>
+	<style>
+		body{
+			display:flex;
+			align-items:center;
+			flex-direction:column;
+			padding:20px 0px 50px 0px;
+		}
+		#topHeading{
+			margin-top:80px;
+		}
+		#part1{
+			margin-top:20px;
+			border:1px solid #ddd;
+			box-shadow:1px 1px 2px #ddd;
+			border-radius:10px;
+			padding:20px 20px 30px 30px;
+			width:70%;
+		}
+		#roundTitle{
+			
+		}
+		#part1 #body{
+			margin-top:20px;
+		}
+		#part1 #body img{
+			margin-top:20px;
+			margin-bottom:30px;
+			width:400px;
+			height:300px;
+		}
+	</style>
+</head>
+<body>
+		<div id="navbar">
+			<div id="left">
+				<a href="home.html">Home<img src="gear.png"/></a>
+				<a href="companies.html">Companies<img src="gear.png"/></a>
+				<a href="bhaskar/Instructions/instructions.html">Instructions<img src="gear.png"/></a>
+				<a href="modules/contact.html">Contact<img src="gear.png"/></a>
+				<div id="title">Forms<img src="gear.png"/></a>
+					<div id="dropdown">
+						<a href="bhaskar/UserDetails.html">Student Details</a>
+						<a href="companyForm.html">Company Details</a>
+						<a href="companyUpdateForm.html">HiringUpdates</a>
+					</div>
+				</div>				
+			</div>
+			<div id="center">
+				<p>Rajiv Gandhi University of Knowledge Technologies</p>
+				<i>catering to the rural youth of Andhra Pradesh</i>
+			</div>
+			<div id="right">
+				<a href="signup.html">Signup</a>
+			</div>
+		</div>
+	<h1 id="topHeading">Hiring Updates</h1>
+	<div id="part1">
+		<div id="heading">
+			<h1 id="title">Company Name</h1>
+		</div>
+		<div id="body">
+			<!--<p id="title">First Round Results</p>
+			<img src="back.jpg"/>-->
+		</div>
+	</div>
+	<script>
+		window.onload=loadData;
+		
+		function Signedin(){
+				var ele=document.querySelector("#navbar #right a");
+				ele.innerHTML="Logout";
+				ele.href="#";	
+				ele.addEventListener("click",Signedout);	
+								
+		}
+		function Signedout(event){
+				localStorage.setItem("userDetails",JSON.stringify({"login":false}));
+				if(event.target.innerHTML=="Logout"){
+					event.preventDefault();
+					var ele=document.querySelector("#navbar #right a");
+					ele.innerHTML="Signup";
+					ele.href="signup.html";}
+				
+		}		
+		
+		async function loadData(){
+			if(JSON.parse(localStorage.getItem("userDetails"))["login"]){Signedin();}
+			else {Signedout();}	
+					
+			var companyDetails=JSON.parse(sessionStorage.getItem("companyId"));
+			var id=companyDetails["id"];
+			var name=companyDetails["name"];
+			document.querySelector("#part1 #heading #title").innerHTML=`<h2>${name}</h2>`
+			var data=JSON.stringify({"id":id})					
+			var res=await fetch("http://localhost:8080/companyUpdate/getUpdate",{
+				"method":"post",
+				"headers":{"Content-Type":"application/json"},
+				"body":data
+			});
+			var html=""
+			var ret=await res.json();
+			if(ret["data"].length==0) html="<h2>No Updates</h2>";
+			else{
+				ret["data"].map(obj=>{
+					html+=
+					`<h3 id="roundTitle">${obj.heading}</h3>
+					<img src="company/${obj.data}"/>`
+				})
+			}
+			document.title="Placement Cell | "+name;
+			document.getElementById("body").innerHTML=html;
+		}
+	</script>
+</body>
+
+
