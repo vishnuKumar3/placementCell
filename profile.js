@@ -11,13 +11,14 @@ module.exports=profile
 profile.use(express.json());
 profile.use(express.static("./static/frontend"))
 profile.use(bodyparser.urlencoded({"extended":false}))
-profile.use(multer({"dest":"./resume"}).any())
+profile.use(multer({"dest":"./static/frontend/resume"}).any())
 
 
 
 
 profile.post("/addProfile",function(req,res){
 	console.log(req.body);
+	console.log(req.files)
 	var details=req.body;
 	var totalDetails=[details.idNumber,details.firstName,details.lastName,details.mobile,details.birthDate,details.address,details.marks10,details.marks12,details.marksBtech];
 	totalDetails.push(details.idNumber+".pdf");
@@ -27,7 +28,7 @@ profile.post("/addProfile",function(req,res){
 	fs.readFile(req.files[0].path,function(err,data){
 		if(err) console.log(err)
 		else{
-			fs.writeFile(__dirname+"static/frontend/resume/"+req.body.idNumber+".pdf",data,function(err){
+			fs.writeFile(__dirname+"/static/frontend/resume/"+req.body.idNumber+".pdf",data,function(err){
 				if(err) console.log(err)
 				else {fs.unlink(req.files[0].path,function(err){
 					if(err) console.log(err);
