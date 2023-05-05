@@ -31,11 +31,11 @@ module.exports=mail
 
 
 function notify(id,res){
-	conn.query(`select name,fulldetails from company where id=${id}`,function(err,data){
+	conn.query(`select name,fulldetails from company where id=${id}`,async function(err,data){
 		message["attachments"][0].path="./static/frontend/"+data[0].fulldetails;
 		message["html"]="Congratulations !!!<br/>You are successfully registered for "+data[0]["name"];
-		transporter.sendMail(message,function(err,info){
-			if(err){ return res.json({"status":false,"msg":"unsuccessful registration77"});}
+		await transporter.sendMail(message,function(err,info){
+			if(err){ return res.json({"status":false,"msg":"unsuccessful registration"});}
 			else return res.json({"status":true,"msg":"successful registration"});
 		})		
 	})
