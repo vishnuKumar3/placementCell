@@ -1,7 +1,8 @@
 '''for user credentials'''
 create table signup(
 	username varchar(50) primary key,
-	password varchar(100)
+	password varchar(100),
+    studentId varchar(7)
 )
 '''for admin credentials'''
 create table admin(
@@ -25,7 +26,8 @@ create table profile(
     address varchar(200),
     marks10 varchar(4),
     marks12 varchar(4),
-    marksBtech varchar(4)
+    marksBtech varchar(4),
+    resume varchar(20)
 )
 '''for company details'''
 create table company(
@@ -46,7 +48,6 @@ create table company(
 create table studentAndcompany(
 	studentId varchar(7),
 	companyId varchar(50),
-	foreign key(studentId) references profile(studentId)
 )
 
 '''for adding hiring updates for each round for a company'''
@@ -54,7 +55,6 @@ create table companyUpdate(
 	id int(5),
 	heading varchar(100),
 	data varchar(50),
-	foreign key(id) references company(id)
 )	
 
 
